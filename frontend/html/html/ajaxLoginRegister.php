@@ -1,5 +1,5 @@
 <?php
-include 'credentials.php';
+include './credentials.php';
 //echo "<script>alert( 'mysql user : ' . $usermysql . ', password : ' . $passmysql );</script>";
 
 error_reporting(E_ALL);
@@ -13,7 +13,7 @@ else if(isSet($_GET['action']) && $_GET['action']=='checkemail')
 {
 	checkemail($_GET['email']);
 }
-// login form (only used action at the moment) 
+// login form (only used action at the moment)
 else if(isSet($_POST['action']) && $_POST['action']=='login')
 {
 	login($_POST['username'],$_POST['password'],$usermysql,$passmysql);
@@ -93,7 +93,7 @@ function login($user,$password,$usermysql,$passmysql){
 	}
     $count = mysqli_num_rows($result);
     $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
-	if($count==1)	
+	if($count==1)
 	{
 		$_SESSION['login_user']=$row['uid'];
 		$_SESSION['user']=$row['username'];
@@ -121,47 +121,47 @@ function get_country_code($lang,$usermysql,$passmysql){
         }
     $count = mysqli_num_rows($result);
     $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
-        if($count==1)   
+        if($count==1)
         {
                 return $row['CODE_LANGUE'];
         }
 }
 
-function register($uname,$upass,$email,$firstname,$lastname){       
+function register($uname,$upass,$email,$firstname,$lastname){
     $db = mysqli_connect('localhost','root','neoveille','rssdata');
     if (!$db) {
     	echo("Erreur de connexion : " . mysqli_connect_error());
     	die;
 	}
-   	$stmt=mysqli_prepare($db,"INSERT INTO users(username,email,password,firstname,lastname) 
+   	$stmt=mysqli_prepare($db,"INSERT INTO users(username,email,password,firstname,lastname)
 	  	VALUES(?,?,?,?,?)");
     mysqli_stmt_bind_param($stmt,"sssss", $uname, $email, $upass, $firstname, $lastname);
     $res = mysqli_stmt_execute($stmt);
 	if ($res) {
     	echo "Enregistrement réussi. Vous pouvez vous connecter";
-	} 
+	}
 	else {
     	echo "Error: " . $stmt . "<br>" . mysqli_error($db);
 	}
   mysqli_close($db);
  }
 
-function send_mail($email,$message,$subject){      
+function send_mail($email,$message,$subject){
   require_once('mailer/class.phpmailer.php');
   $mail = new PHPMailer();
-  $mail->IsSMTP(); 
-  $mail->SMTPDebug  = 0;                     
-  $mail->SMTPAuth   = true;                  
-  $mail->SMTPSecure = "ssl";                 
-  $mail->Host       = "smtp.gmail.com";      
-  $mail->Port       = 465;             
+  $mail->IsSMTP();
+  $mail->SMTPDebug  = 0;
+  $mail->SMTPAuth   = true;
+  $mail->SMTPSecure = "ssl";
+  $mail->Host       = "smtp.gmail.com";
+  $mail->Port       = 465;
   $mail->AddAddress($email);
-  $mail->Username="YOUR EMAIL";  
-  $mail->Password="YOUR PASSWORD";            
+  $mail->Username="YOUR EMAIL";
+  $mail->Password="YOUR PASSWORD";
   $mail->SetFrom('admin@neoveille.org','Néoveille');
   $mail->AddReplyTo("admin@neoveille.org","Néoveille");
   $mail->Subject    = $subject;
   $mail->MsgHTML($message);
   $mail->Send();
- } 
+ }
 ?>
