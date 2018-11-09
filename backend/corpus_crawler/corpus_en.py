@@ -5,10 +5,11 @@ program to retrieve articles from rss feeds (and potentially other web sources)
 See main() function for details
 '''
 
-import mysql.connector
-from mysql.connector import Error
+
 import logging, pickle,codecs
 import feedparser,re
+import mysql.connector
+from mysql.connector import Error
 feedparser.USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0'
 
 from datetime import datetime
@@ -55,9 +56,9 @@ class corpus:
     '''
     def __init__(self, lang, source='db',typ='rss'):
         "construit une instance avec les attributs de base"
-        self.lang = lang
-        self.source=source
-        self.typ=typ
+        self.lang   = lang
+        self.source = source
+        self.typ    = typ
 
     def get_corpus_list_fromDB(self):
         """ Connect to MySQL database """
@@ -68,7 +69,7 @@ class corpus:
             conn = mysql.connector.connect(host='localhost',
                                            database='rssdata_db',
                                            user='neoveille_user',
-                                           password='TijkelsachatpiOs')
+                                           password='jidVophekfawgok2')
             if conn.is_connected():
                 #print('Connected to MySQL database')
                 cursor = conn.cursor()
@@ -101,7 +102,7 @@ class corpus:
             conn = mysql.connector.connect(host='localhost',
                                            database='rssdata_db',
                                            user='neoveille_user',
-                                           password='TijkelsachatpiOs')
+                                           password='jidVophekfawgok2')
             if conn.is_connected():
                 #print('Connected to MySQL database')
                 cursor = conn.cursor()
@@ -241,7 +242,7 @@ class rssfeeds(corpus):
                     #flog.write("Results for link : " + str(row + "\n"))
                     row={}
                 log.info(str(res))
-                pickle.dump(res, open("res.dump", 'wb')) # debug tool
+                #pickle.dump(res, open("res.dump", 'wb')) # debug tool
                 if save==True:
                     self.save_rsscorpus_to_DB(res)
                     #ligne a decommenter pour que ce soit bien mis dans SOLR
@@ -255,7 +256,7 @@ class rssfeeds(corpus):
             conn = mysql.connector.connect(host='localhost',
                                            database='rssdata_db',
                                            user='neoveille_user',
-                                           password='TijkelsachatpiOs',
+                                           password='jidVophekfawgok2',
                                            charset='utf8mb4',
                                            collation='utf8mb4_general_ci',
                                            autocommit=True

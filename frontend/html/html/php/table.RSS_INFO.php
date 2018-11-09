@@ -17,19 +17,20 @@ ini_set('display_errors', '1');
  * Edit the following with your database connection options
  */
 include '../credentials.php';
+
 $sql_details = array(
 	"type" => "Mysql",
 	"user" => $usermysql,
-	"pass" => $passmysl,
-	"host" => "localhost",
+	"pass" => $passmysql,
+	"host" => $host,
 	"port" => "3306",
-	"db"   => "rssdata",
+	"db"   => $rssdata,
 	"dsn"  => "charset=utf8"
 );
 
 
 
-include( "../Editor/php/DataTables.php" );
+include '../Editor/php/DataTables.php';
 
 // Alias Editor classes so they are easy to use
 use
@@ -39,7 +40,6 @@ use
 	DataTables\Editor\Mjoin,
 	DataTables\Editor\Upload,
 	DataTables\Editor\Validate;
-
 
 // Build our Editor instance and process the data coming from _POST
 Editor::inst( $db, 'RSS_INFO', 'ID_RSS' )

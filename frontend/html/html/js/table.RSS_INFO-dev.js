@@ -1,11 +1,14 @@
-/* 
-Corpus datatable-editor and statistics  
-see ../table/datatable-corpus-dev.php for layout and logic 
+/*
+Corpus datatable-editor and statistics
+see ../table/datatable-corpus-dev.php for layout and logic
 */
 
 
 /* corpus datatable editor */
 
+var solrHost   = 'http://127.0.0.1:1983/solr/';
+var collection = 'test2';
+var solrURL    = solrHost + collection;
 
 
 var editorCorpus; // global object for editor
@@ -98,22 +101,22 @@ $(document).ready(function() {
                 months:   [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ],
                 weekdays: [ 'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam' ]
             }
-        }		
+        }
 	} );
-    
+
     // New record
     $('a.editorCorpus_create').on('click', function (e) {
         e.preventDefault();
- 
+
         editorCorpus.create( {
            // title: 'Create new record',
             buttons: 'Add'
         } );
-    } ); 
+    } );
 	// Edit record
     $('#RSS_INFO').on('click', 'td.editorCorpus_edit', function (e) {
         e.preventDefault();
- 
+
         editorCorpus.edit( $(this).closest('tr'), {
            // title: 'Edit record',
             buttons: 'Update'
@@ -206,7 +209,7 @@ $(document).ready(function() {
 		select: true,
 		lengthChange: true,
 		buttons: [
-			{ extend: 'create', editor: editorCorpus, 
+			{ extend: 'create', editor: editorCorpus,
 			  formButtons:[
 			  	'Create',
 			  	{	label:'Check RSS feed',
@@ -242,13 +245,13 @@ $(document).ready(function() {
             }
         }
 	} );
-	
-	
+
+
 	// Add event listener for opening and closing details (datatable details)
 	$('#RSS_INFO tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tableCorpus.row( tr );
- 
+
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
@@ -261,17 +264,17 @@ $(document).ready(function() {
             getinfo2(row.data(), function(data)
             {
     	        row.child(  data ).show();
-        	    tr.addClass('shown');        	    
+        	    tr.addClass('shown');
     			// Render the Charts
   				//dc.renderAll();
             }
             );
         }
     } );
-    
+
     // filter for each column
     $('#RSS_INFO').dataTable().columnFilter({
-					aoColumns: [ 
+					aoColumns: [
 						{sSelector: "#filter_url",type: "text", bRegex: true, bSmart: true },
 						{sSelector: "#filter_pays",type: "text", bRegex: true, bSmart: true },
 						{sSelector: "#filter_langue", type: "text", bRegex: true, bSmart: true  },
@@ -282,19 +285,21 @@ $(document).ready(function() {
             			{sSelector: "#filter_format", type: "text", bRegex: true, bSmart: true  },
             			{sSelector: "#filter_encoding", type: "text", bRegex: true, bSmart: true  }
 					]
-		});    
+		});
 });
 
 //  corpus details for newspaper details
-function getinfo2(d,callback) 
+function getinfo2(d,callback)
 {
-		var langues = {'12':'rss_spanish','13':'rss_german','14':'rss_netherlands','10':"rss_italian",'5':"rss_french", '7':"RSS_polish", 
+		console.log(solrURL);
+		var langues = {'12':'rss_spanish','13':'rss_german','14':'rss_netherlands','10':"rss_italian",'5':"rss_french", '7':"RSS_polish",
 			'8':'RSS_brasilian', '4':'RSS_chinese', '3':'RSS_russian', '2':'RSS_czech', '6':'RSS_greek'};
 		//alert(langues[d.RSS_INFO.ID_LANGUE]);
 		query= d.RSS_JOURNAL.NAME_JOURNAL;
         var request= $.ajax({
 //        url:'http://tal.lipn.univ-paris13.fr/solr/rss_french/select?q=neologismes%3A' + d.lexie + '&rows=5&df=contents&wt=json&indent=true&hl=true&hl.fl=contents&hl.simple.pre=%3Cem%3E&hl.simple.post=%3C%2Fem%3E',
-        url:'http://tal.lipn.univ-paris13.fr/solr/' + langues[d.RSS_INFO.ID_LANGUE] + '/select',
+//				url:'http://tal.lipn.univ-paris13.fr/solr/' + langues[d.RSS_INFO.ID_LANGUE] + '/select',
+        url:solrURL + '/select',
         data:{  "q":'source:"'+ d.RSS_JOURNAL.NAME_JOURNAL + '"',
         		rows:300000,
 //        		df:"dateS",
@@ -327,7 +332,7 @@ function getinfo2(d,callback)
             alert("Error : " + request.status + ". Response : " +  request.statusText);
             restable= '<div>Problème :'+ request.status + ". Response : " +  request.statusText + '</div>';
             callback(restable)
-            
+
         }
     });
 }
@@ -346,14 +351,14 @@ var timeChart = dc.lineChart("#dc-time-chart");
   // format our data
   var dtgFormat = d3.time.format("%Y-%m-%dT%H:%M:%S");
   var dtgFormat2 = d3.time.format("%a %e %b %H:%M");
-  
-  jsondata.forEach(function(d) { 
+
+  jsondata.forEach(function(d) {
     d.dtg   = dtgFormat.parse(d.dateS.substr(0,19));
-  //  alert(d.dtg); 
+  //  alert(d.dtg);
     d.link  = d.link;
-  }); 
+  });
 //});
-  
+
   // Run the data through crossfilter and load our 'facts'
   var facts = crossfilter(jsondata);
 
@@ -377,16 +382,16 @@ var volumeByWeek = facts.dimension(function(d) {
 var volumeByWeekGroup = volumeByWeek.group()
     .reduceCount(function(d) { return d.dtg; });
 
-    
+
     // min and max date
     var minDate = volumeByHour.bottom(1)[0].date;
     var maxDate = volumeByHour.top(1)[0].date;
-    
+
   // Create dataTable dimension
   var timeDimension = facts.dimension(function (d) {
     return d.dtg;
   });
-  
+
   var width = document.getElementById('RSS_INFO').offsetWidth;
   // time graph
   timeChart
@@ -412,7 +417,7 @@ var volumeByWeekGroup = volumeByWeek.group()
     .x(d3.time.scale().domain([minDate, maxDate]))
     //.x(d3.time.scale().domain([new Date(2016, 3, 01), new Date(2016, 7, 13)]))
     .xAxis();
-  
+
   /// render the datatable
     dataTableDC.width(960).height(800)
     .dimension(timeDimension)
@@ -421,13 +426,13 @@ var volumeByWeekGroup = volumeByWeek.group()
 	.size(10)
     .columns([
       function(d) { return d.dtg; },
-      function(d) { 
+      function(d) {
           return '<a href=\"' + d.link + "\" target=\"_blank\">Article</a>"}
     ])
     .sortBy(function(d){ return d.dtg; })
     .order(d3.ascending);
     //alert(dataTableDC);
-    
+
     // Render the Charts
   	dc.renderAll();
 }
@@ -440,7 +445,7 @@ function check_rss(url) {
 		var request = $.ajax({
 			url: "php/dbprocedures.php",
 			type: "GET",
-			data:{"action":"check","url":url},			
+			data:{"action":"check","url":url},
 			dataType: "html"
 		});
 
@@ -461,8 +466,8 @@ function find_rss(url) {
 		var request = $.ajax({
 			url: "php/dbprocedures.php",
 			method: "GET",
-			data:{"action":"find","url":url},			
-			dataType: "html" 
+			data:{"action":"find","url":url},
+			dataType: "html"
 			/*,
 			success:function(msg,textStatus,jqXHR){
 				$("#results").html(msg);
@@ -481,7 +486,7 @@ function find_rss(url) {
 			$("#resultsRSS")
 				.html(msg)
 				.css({'background-color':'#e6e6ff','box-shadow':'10px 10px 5px grey', 'padding':'15px',"margin":'15px', "width":'50%'});
-			
+
 		});
 
 		request.fail(function(jqXHR, textStatus) {
@@ -518,7 +523,7 @@ $("#corpusinfoBtn2").click(function() {
        });
    });
 
-// corpus synthesis toggler   
+// corpus synthesis toggler
 $(document).on('click', 'td.toggler', function(e){
         e.preventDefault();
         console.log(this);
@@ -546,7 +551,7 @@ $("#corpusinfoBtnBr").on('click',function(){
 				    $("#corpusResultsBr").show();
 				}
 				else{
-					$("#corpusinfoBtnBr").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnBr2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnBr").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnBr2"></i>' + data + '</a>');
 				}
             }
             );
@@ -560,7 +565,7 @@ $("#corpusinfoBtnFr").on('click',function(){
 				    $("#corpusResultsFr").show();
 				}
 				else{
-					$("#corpusinfoBtnFr").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnFr2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnFr").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnFr2"></i>' + data + '</a>');
 				}
             }
             );
@@ -575,7 +580,7 @@ $("#corpusinfoBtnCh").on('click',function(){
 				    $("#corpusResultsCh").show();
 				}
 				else{
-					$("#corpusinfoBtnCh").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnCh2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnCh").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnCh2"></i>' + data + '</a>');
 				}
             }
             );
@@ -589,7 +594,7 @@ $("#corpusinfoBtnGr").on('click',function(){
 				    $("#corpusResultsGr").show();
 				}
 				else{
-					$("#corpusinfoBtnGr").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnGr2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnGr").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnGr2"></i>' + data + '</a>');
 				}
             }
             );
@@ -603,7 +608,7 @@ $("#corpusinfoBtnPl").on('click',function(){
 				    $("#corpusResultsPl").show();
 				}
 				else{
-					$("#corpusinfoBtnPl").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnPl2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnPl").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnPl2"></i>' + data + '</a>');
 				}
             }
             );
@@ -617,7 +622,7 @@ $("#corpusinfoBtnRu").on('click',function(){
 				    $("#corpusResultsRu").show();
 				}
 				else{
-					$("#corpusinfoBtnRu").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnRu2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnRu").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnRu2"></i>' + data + '</a>');
 				}
             }
             );
@@ -631,7 +636,7 @@ $("#corpusinfoBtnCz").on('click',function(){
 				    $("#corpusResultsCz").show();
 				}
 				else{
-					$("#corpusinfoBtnCz").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnCz2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnCz").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnCz2"></i>' + data + '</a>');
 				}
             }
             );
@@ -645,7 +650,7 @@ $("#corpusinfoBtnIt").on('click',function(){
 				    $("#corpusResultsIt").show();
 				}
 				else{
-					$("#corpusinfoBtnIt").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnIt2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnIt").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnIt2"></i>' + data + '</a>');
 				}
             }
             );
@@ -659,7 +664,7 @@ $("#corpusinfoBtnDe").on('click',function(){
 				    $("#corpusResultsDe").show();
 				}
 				else{
-					$("#corpusinfoBtnDe").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnDe2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnDe").replaceWith('<a  class="btn btn-info" id="corpusinfoBtnDe2"></i>' + data + '</a>');
 				}
             }
             );
@@ -673,20 +678,20 @@ $("#corpusinfoBtnNl").on('click',function(){
 				    $("#corpusResultsNl").show();
 				}
 				else{
-					$("#corpusinfoBtnNl").replaceWith('<a href="" class="btn btn-info" id="corpusinfoBtnNl2"></i>' + data + '</a>');				
+					$("#corpusinfoBtnNl").replaceWith('<a href="" class="btn btn-info" id="corpusinfoBtnNl2"></i>' + data + '</a>');
 				}
             }
             );
 });
 
 
-function get_corpus_info_jsondata2(lang,callback) 
+function get_corpus_info_jsondata2(lang,callback)
 {
 		var langCSV = {'Nl':'rss_netherlands.csv','De':'rss_german.csv','It':"rss_italian.csv",'Fr':"rss_french.csv", 'Pl':"RSS_polish.csv", 'Br':'RSS_brasilian.csv', 'Ch':'RSS_chinese.csv', 'Ru':'RSS_russian.csv', 'Cz':'RSS_czech.csv', 'Gr':'RSS_greek.csv'};
 		var langues = {'It':"RSS_italian.json",'Fr':"rss_french.json", 'Pl':"RSS_polish.json", 'Br':'RSS_brasilian.json', 'Ch':'RSS_chinese.json', 'Ru':'RSS_russian.json', 'Cz':'RSS_czech.json', 'Gr':'RSS_greek.json'};
 		//alert(langues[d.RSS_INFO.ID_LANGUE]); langues[lang]
 		file = "data/" + langCSV[lang]
-		console.log(file); 
+		console.log(file);
 		d3.csv(file,function(data){
     		console.log(data[0]);
             num = data.length;
@@ -714,9 +719,9 @@ function build_corpus_info_lang_cnt(jsondata, lang){
   var dtgFormat = d3.time.format("%Y-%m-%d");
   var dtgFormat_bk = d3.time.format("%Y-%m-%dT%H:%M:%S");
   var dtgFormat2 = d3.time.format("%a %e %b");
-  
-  jsondata.forEach(function(d) { 
-  		
+
+  jsondata.forEach(function(d) {
+
   		if (d.dateS.length!=10){console.log(d.dateS);}
     	//d.dtg   = dtgFormat.parse(d.dateS);
     	d.dtg   = dtgFormat.parse(d.dateS.substr(0,10));
@@ -725,7 +730,7 @@ function build_corpus_info_lang_cnt(jsondata, lang){
  		d.country  = d.country;
     	d.subject  = d.subject;
     	d.count = +d.count; // pre-aggregated data by month
-  }); 
+  });
  console.log("Data Loaded");
  console.log(jsondata[0]);
 
@@ -740,29 +745,29 @@ function build_corpus_info_lang_cnt(jsondata, lang){
 
 
 /*************** TOTAL CHART *********************************/
-  
+
 totalCount = dc.dataCount('.dc-data-count'+lang);
-totalCount 
+totalCount
         .dimension(facts)
-        .group(all)  
+        .group(all)
         .html({
             some: '<strong>%filter-count</strong> sélectionnés sur <strong>' + allv +'</strong> articles' +
                 ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'>Réinitialiser tout</a>',
             all: 'Tous les articles sélectionnés. Cliquez sur les graphes pour effectuer des filtres.'
         });
-  
+
 totalCount2 = dc.dataCount('.dc-data-count2'+lang);
-totalCount2 
+totalCount2
         .dimension(facts)
-        .group(all)  
+        .group(all)
         .html({
             some: '<strong>%filter-count</strong> sélectionnés sur <strong>' + allv +'</strong> articles' +
                 ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'>Réinitialiser</a>',
             all: 'Tous les articles sélectionnés. Cliquez sur les graphes pour effectuer des filtres.'
         });
-  
-  
-console.log("Count chart built"); 		   
+
+
+console.log("Count chart built");
 console.log(totalCount);
 
 /***************************** COUNTRY PIE CHART ***********************/
@@ -775,7 +780,7 @@ var countryChart = dc.pieChart("#dc-country-chart"+lang);
     var countryDimension = facts.dimension(function (d) { return d.country; });
     var countryGroup = countryDimension.group().reduceSum(function(d){return d.count;});
 	console.log("Country groups :" + countryGroup.size());
-  
+
 // country chart
  	countryChart
  		.width(500)
@@ -796,7 +801,7 @@ var countryChart = dc.pieChart("#dc-country-chart"+lang);
         .dimension(countryDimension)
         .group(countryGroup)
  	    .legend(dc.legend().x(0).y(20).itemHeight(10).gap(5));
-        
+
 console.log("country chart built");
 console.log(countryChart);
 
@@ -817,7 +822,7 @@ var periodChart = dc.barChart("#range-chart"+lang);
     .reduceSum(function(d) { return d.count; });
     console.log("Week groups :" + volumeByDayGroup.size());
 
-    
+
     // min and max date
     var minDate = volumeByDay.bottom(1)[0].dtg;
  	var maxDate = volumeByDay.top(1)[0].dtg;
@@ -854,11 +859,11 @@ var periodChart = dc.barChart("#range-chart"+lang);
     .rangeChart(periodChart)
     .x(d3.time.scale().domain([minDate, maxDate]));
 //    .xAxis();
-  
-  
+
+
   console.log("Time chart built");
   console.log(timeChart);
-  
+
 /***************************** range Chart test *******************/
 
 
@@ -884,7 +889,7 @@ var subjectChart = dc.pieChart("#dc-subject-chart"+lang);
     var subjectDimension = facts.dimension(function (d) { return d.subject; });
     var subjectGroup = subjectDimension.group().reduceSum(function(d){return d.count;});
 	console.log("Subject groups :" + subjectGroup.size());
-  
+
 // subject chart
  	subjectChart
  		.width(500)
@@ -905,7 +910,7 @@ var subjectChart = dc.pieChart("#dc-subject-chart"+lang);
         .dimension(subjectDimension)
         .group(subjectGroup)
  	    .legend(dc.legend().x(0).y(20).itemHeight(10).gap(5));
-        
+
 console.log("Subject chart built");
 console.log(subjectChart);
 
@@ -921,7 +926,7 @@ var newspaperChart = dc.rowChart("#dc-newspaper-chart"+lang);
     var newspaperGroup = newspaperDimension.group().reduceSum(function(d){return d.count;})
 //    var newspaperTopGroup = newspaperGroup.top(15);
 
-/// for top	
+/// for top
 function remove_empty_bins(source_group) {
     function non_zero_pred(d) {
         return d.value != 0;
@@ -962,12 +967,12 @@ console.log("newspaper groups :" + newspaperGroup.size());
 
 
 
-// x axis label rotation  	: does not work	
+// x axis label rotation  	: does not work
 newspaperChart.on("renderlet",function (chart) {
    // rotate x-axis labels
    chart.selectAll('g.x text')
      .attr('transform', 'translate(-10,10) rotate(315)');
-  });   
+  });
 
 
 console.log("Newspapers chart built");
@@ -984,7 +989,7 @@ var dataTableDC = dc.dataTable("#dc-table-chart"+lang);
   var timeDimension = facts.dimension(function (d) {
     return d.dtg;
   });
-  
+
   console.log("Dimensions created");
 
   /// render the datatable
@@ -1006,7 +1011,7 @@ var dataTableDC = dc.dataTable("#dc-table-chart"+lang);
     .sortBy(function(d){ return d.count; })
     .order(d3.descending);
     //console.log(dataTableDC);
-    
+
 console.log("Datatable chart built");
 console.log(timeDimension);
 
@@ -1015,12 +1020,12 @@ console.log(timeDimension);
 /***************************** RENDER ALL THE CHARTS  ***********************/
 
     // make visible the zone : does not work
-    
+
 //    $("#corpusresults").show();
      //$("#corpusresults").css( "display", "visible !important");
 	$("#corpusinfoBtn"+lang).replaceWith('<a href="" class="btn btn-info" id="corpusinfoBtn2Done">Chargement effectué. ' + allv + ' articles. Début de période : ' + minDate.toLocaleString() + '.</a>');
     // Render the Charts
-  	dc.renderAll(); 
+  	dc.renderAll();
   	console.log("All is done");
 
 }

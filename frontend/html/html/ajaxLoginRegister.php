@@ -1,5 +1,5 @@
 <?php
-include './credentials.php';
+include 'credentials.php';
 //echo "<script>alert( 'mysql user : ' . $usermysql . ', password : ' . $passmysql );</script>";
 
 error_reporting(E_ALL);
@@ -16,7 +16,7 @@ else if(isSet($_GET['action']) && $_GET['action']=='checkemail')
 // login form (only used action at the moment)
 else if(isSet($_POST['action']) && $_POST['action']=='login')
 {
-	login($_POST['username'],$_POST['password'],$usermysql,$passmysql);
+	login($_POST['username'],$_POST['password'],$usermysql,$passmysql,$rssdata);
 }
 else if (isSet($_POST['action']) && $_POST['action']=='signup')
 {
@@ -25,8 +25,8 @@ else if (isSet($_POST['action']) && $_POST['action']=='signup')
 
 
 // functions
-function checkuser($name){
-    $db = mysqli_connect('localhost','root','neoveille','rssdata');
+function checkuser($name,$rssdata){
+    $db = mysqli_connect('localhost','root','neoveille',$rssdata);
     if (!$db) {
     	echo("Erreur de connexion : " . mysqli_connect_error());
     	die;
@@ -51,8 +51,8 @@ function checkuser($name){
 	}
 }
 
-function checkemail($name){
-    $db = mysqli_connect('localhost','root','neoveille','rssdata');
+function checkemail($name,$rssdata){
+    $db = mysqli_connect('localhost','root','neoveille',$rssdata);
     if (!$db) {
     	echo("Erreur de connexion : " . mysqli_connect_error());
     	die;
@@ -78,9 +78,9 @@ function checkemail($name){
 }
 
 // check $user and $password exist in database/table and put info in global session variable
-function login($user,$password,$usermysql,$passmysql){
+function login($user,$password,$usermysql,$passmysql,$rssdata){
 
-	$db = mysqli_connect('localhost',$usermysql,$passmysql,'rssdata');
+	$db = mysqli_connect('localhost',$usermysql,$passmysql,$rssdata);
 	if (!$db) {
 		echo "<script>alert( 'erreur de connexion : ' . mysqli_connect_error() . '. Contactez l administrateur.' );</script>";
     	die;
@@ -106,9 +106,9 @@ function login($user,$password,$usermysql,$passmysql){
 }
 
 // retrieve country code and return it to calling function
-function get_country_code($lang,$usermysql,$passmysql){
+function get_country_code($lang,$usermysql,$passmysql,$rssdata){
 
-        $db = mysqli_connect('localhost',$usermysql,$passmysql,'rssdata');
+        $db = mysqli_connect('localhost',$usermysql,$passmysql,$rssdata);
         if (!$db) {
         echo("Erreur de connexion : " . mysqli_connect_error());
         die;
@@ -127,8 +127,8 @@ function get_country_code($lang,$usermysql,$passmysql){
         }
 }
 
-function register($uname,$upass,$email,$firstname,$lastname){
-    $db = mysqli_connect('localhost','root','neoveille','rssdata');
+function register($uname,$upass,$email,$firstname,$lastname,$rssdata){
+    $db = mysqli_connect('localhost','root','neoveille',$rssdata);
     if (!$db) {
     	echo("Erreur de connexion : " . mysqli_connect_error());
     	die;

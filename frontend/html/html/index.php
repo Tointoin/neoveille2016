@@ -1,11 +1,10 @@
 <?php
-header("Access-Control-Allow-Origin: lipn.univ-paris13.fr"); 
+header("Access-Control-Allow-Origin: lipn.univ-paris13.fr");
 session_start();
-//include './credentials.php';
 $timeout = 1800; // Number of seconds until it times out.
 
-include('./credentials.php');
- 
+include 'credentials.php';
+
 // Check if the timeout field exists.
 if(isset($_SESSION['timeout'])) {
     // See if the number of seconds since the last
@@ -19,7 +18,7 @@ if(isset($_SESSION['timeout'])) {
 	header('Location: login.php?action=login');
     }
 }
- 
+
 // Update the timout field with the current time.
 $_SESSION['timeout'] = time();
 
@@ -48,7 +47,7 @@ echo "<script>console.log( 'SESSION VARIABLES - LANGUAGE : " . $_SESSION['langua
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'> -->
     <!-- CSS Libs -->
     <link rel="stylesheet" type="text/css" href="../lib/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../lib/css/font-awesome.min.css"> 
+    <link rel="stylesheet" type="text/css" href="../lib/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../lib/css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="../lib/css/bootstrap-switch.min.css">
 <!--    <link rel="stylesheet" type="text/css" href="../lib/css/checkbox3.min.css"> -->
@@ -61,7 +60,7 @@ echo "<script>console.log( 'SESSION VARIABLES - LANGUAGE : " . $_SESSION['langua
     <!-- CSS App -->
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/themes/flat-blue.css">
-    
+
 
 <style type="text/css" class="init">
 
@@ -102,7 +101,7 @@ td.editorCorpus_edit {
 td.editorCorpus_remove {
     background: url('images/drop.png') no-repeat center center;
     cursor: pointer;}
-    
+
 td.details-control {
     background: url('images/details_open.png') no-repeat center center;
     cursor: pointer;
@@ -149,7 +148,7 @@ td.editor_edit {
 td.editor_remove {
     background: url('images/drop.png') no-repeat center center;
     cursor: pointer;
-    
+
 }
 td.editorU_edit {
     background: url('images/pencil_small.png') no-repeat center center;
@@ -181,11 +180,11 @@ function togglevisible(id, currentvalue) {
 	    document.getElementById(id).style.display = "block";
 	}
 	else{
-	    document.getElementById(id).style.display = "none";	
+	    document.getElementById(id).style.display = "none";
 	}
 }
-</script>    
-    
+</script>
+
 </head>
 
 <body class="flat-blue">
@@ -384,7 +383,7 @@ function togglevisible(id, currentvalue) {
                                             </li>
 <?php
 }
-?> 
+?>
                                           <li><a href="#" id="neo-search2">Moteur interne</a>
                                             </li>
                                         </ul>
@@ -446,7 +445,7 @@ function togglevisible(id, currentvalue) {
                                     </div>
                                 </div>
                             </li>
-<?php 
+<?php
 }
 ?>
 
@@ -505,7 +504,7 @@ function togglevisible(id, currentvalue) {
 											<li><b>Le gestionnaire de néologismes :</b>il s'agit d'une base de données préexistante au projet développée en collaboration avec Jean-François Sablayrolles au LDI. Nous renvoyons à (Cartier et Sablayrolles, 2010) pour le détail de ce module. Neologia est en interaction avec le moteur Neoveille de deux façons principales : d'une part, les néologismes présentés et leurs contextes peuvent être directement exportés dans la base Neologia ; d'autre part, il est toujours possible d'obtenir des informations sur le cycle de vie des néologismes après son insertion dans Neologia, par retour au moteur Neoveille.</li>
 											<li><b>Le repérage des néologismes sémantiques par la méthode du profil combinatoire</b> est lancé sur les lexies cibles et sera également disponible dans l'interface de recherche et d'analyse.</li>
 										</ol>
-									</div>	
+									</div>
 						<!-- tab 2 - tuto dvlpt -->
 									<div role="tabpanel" class="tab-pane" id="tuto">
 										<p>Ci-dessous, vous trouverez des tutoriels vidéos détaillant les différentes composantes de la plateforme. Pour une présentation détaillée de Néoveille, voir les publications.</p>
@@ -523,7 +522,7 @@ function togglevisible(id, currentvalue) {
       <div class="panel-body">
 <!-- presentation generale -->
 		<div class="card">
-                                				<div class="card-body">							
+                                				<div class="card-body">
 													<p>La plateforme Néoveille est présentée dans son ensemble dans la vidéo ci-dessous.</p>
 													<video width="640" height="480" controls="controls">
   														<source src="../docs/neoveille-gen.m4v" type="video/mp4" />
@@ -548,7 +547,7 @@ function togglevisible(id, currentvalue) {
 <!-- gestionnaire de corpus -->
       <div class="panel-body">
 											<!--<div class="card">
-                                				<div class="card-body">	
+                                				<div class="card-body">
 													<p>Le gestionnaire de corpus vous permet d'indiquer au moteur les corpus web que vous souhaitez utiliser. Les sources d'informations ainsi constituées sont récupérées automatiquement deux fois par jour. Le menu principal "Corpus" donne accès à plusieurs sous-menus permettant de spécifier les différents paramètres de vos sources d'informations. Vous trouverez ci-dessous le descriptif succinct des différentes sous-menus, ainsi qu'un tutoriel vidéo.</p>
 													<table class="table table-striped">
 															<thead><tr><th>Sous-menu</th><th>Description</th><th>Tutoriel vidéo</th></tr></thead>
@@ -561,11 +560,11 @@ function togglevisible(id, currentvalue) {
 																<tr><th scope="row">Format des sources</th><td>interface permettant de gérer les formats des sources d'informations.</td><td></td></tr>
 																<tr><th scope="row">Encodage des sources</th><td>interface permettant de gérer les encodages des sources d'informations.</td><td></td></tr>
 															</tbody>
-													</table>                    										
+													</table>
 												</div>
 											</div>  -->
 												<div class="card">
-                                				<div class="card-body">	
+                                				<div class="card-body">
 													<div class="text-indent">L'interface du gestionnaire de corpus vous permet d'accéder aux sources d'information récupérées automatiquement pour chacune des langues du projet. Vous pouvez via cette interface visualiser les sources et différentes informations sur les articles récupérés, ainsi qu'ajouter et modifier les sources à récupérer. Les deux tutoriels ci-dessous présentent les fonctionnalités de cette interface.</div>
 													<div class="sub-title">Partie 1</div>
 													<video width="640" height="480" controls="controls">
@@ -581,7 +580,7 @@ function togglevisible(id, currentvalue) {
 													</video>
 
 												</div>
-											</div>											    
+											</div>
 	  </div>
     </div>
   </div>
@@ -598,7 +597,7 @@ function togglevisible(id, currentvalue) {
 <!-- gestionnaire de dictionnaires -->
       <div class="panel-body">
 											<div class="card">
-                                				<div class="card-body">	
+                                				<div class="card-body">
 													<p>Le gestionnaire de dictionnaires vous permet d'indiquer au moteur les dictionnaires devant être utilisés pour la reconnaissance des néologismes de forme. Deux types de dictionnaires sont utilisés : un dictionnaire de référence, comprenant l'ensemble du lexique de la langue général; un dictionnaire d'exclusion, comprenant la liste des formes devant être exclues de la reconnaissance automatique (par exemple : coquilles); dictionnaire terminologique, si vous souhaitez travailler sur la néologie en terminologie, afin d'exclure les lexies déjà attestées dans le domaine. Dans les interfaces de ce module, vous pouvez ajouter et éditer des dictionnaires. Pour les utiliser, il sera nécessaire de modifier le paramétrage (voir module paramètres)</p>
 													<table class="table table-striped">
 															<thead><tr><th>Sous-menu</th><th>Description</th></tr></thead>
@@ -607,13 +606,13 @@ function togglevisible(id, currentvalue) {
 																<tr><th scope="row">Dictionnaire d'exclusion</th><td>interface pour ajouter, modifier, supprimer des entrées dans le dictionnaire d'exclusion. Ce dictionnaire est construit au fur et à mesure du projet lorsque des candidats néologismes sont repérés à tort par le système. (voir néologismes de forme)</td></tr>
 																<tr><th scope="row">Dictionnaire(s) terminologique(s) (en cours de développement)</th><td>interface permettant de gérer des dictionnaires additionnels liés à des domaines particuliers.</td></tr>
 															</tbody>
-													</table>                    										
+													</table>
 												</div>
-											</div>			
-      </div>    
+											</div>
+      </div>
     </div>
   </div>
-  											<!-- néologismes de forme -->  
+  											<!-- néologismes de forme -->
   											<div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingFour">
       <h4 class="panel-title">
@@ -625,7 +624,7 @@ function togglevisible(id, currentvalue) {
     <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
       <div class="panel-body">
 											<div class="card">
-                                				<div class="card-body">	
+                                				<div class="card-body">
 													<p>L'interface des néologismes de forme vous permet d'accéder aux néologismes reconnus automatiquement par le système. Vous pouvez choisir la langue de travail, et ensuite visualiser et éditer les néologismes candidats. L'objectif principal de cette interface est de valider ou d'invalider les néologismes reconnus automatiquement, afin soit d'alimenter les dictionnaires de référence ou d'exclusion, soit d'alimenter la base de description des néologismes. Afin de faciliter le travail, un certain nombre de fonctionnalités sont disponibles, présentées dans le tutoriel ci-dessous.</p>
 													<video width="640" height="480" controls="controls">
   														<source src="../docs/neoveille-cand-neo.m4v" type="video/mp4" />
@@ -634,11 +633,11 @@ function togglevisible(id, currentvalue) {
 													</video>
 
 												</div>
-											</div>      
+											</div>
 	  </div>
     </div>
-  </div> 
-  											<!-- gestionnaire des néologismes -->  
+  </div>
+  											<!-- gestionnaire des néologismes -->
 	  										<div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingFive">
       <h4 class="panel-title">
@@ -650,7 +649,7 @@ function togglevisible(id, currentvalue) {
     <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
       <div class="panel-body">
 											<div class="card">
-                                				<div class="card-body">	
+                                				<div class="card-body">
 													<p>L'interface des néologismes de forme vous permet d'accéder aux néologismes reconnus automatiquement par le système. Vous pouvez choisir la langue de travail, et ensuite visualiser et éditer les néologismes candidats. L'objectif principal de cette interface est de valider ou d'invalider les néologismes reconnus automatiquement, afin soit d'alimenter les dictionnaires de référence ou d'exclusion, soit d'alimenter la base de description des néologismes. Afin de faciliter le travail, un certain nombre de fonctionnalités sont disponibles, présentées dans le tutoriel ci-dessous.</p>
 													<!--<video width="640" height="480" controls="controls">
   														<source src="../docs/neoveille-neo.m4v" type="video/mp4" />
@@ -662,8 +661,8 @@ function togglevisible(id, currentvalue) {
 												</div>
 											</div>      </div>
     </div>
-  </div> 
-										</div>																			
+  </div>
+										</div>
 									</div>
 						<!-- tab 3 : publi -->
 									<div role="tabpanel" class="tab-pane" id="publi">
@@ -678,7 +677,7 @@ function togglevisible(id, currentvalue) {
 <p>Viaux Julie, Cartier Emmanuel (2016), « Étude linguistique et quantitative de la pénétration des anglicismes de type (N,ADJ)-Ving dans sept langues à partir d’un corpus contemporain journalistique », Colloque international Emprunts néologiques et équivalents autochtones. Mesure de leurs circulations respectives, Universytet Łódzki, 10-12 octobre 2016, Łódz, Pologne. http://neologie.uni.lodz.pl</p>
 <p>Lejeune Gaël, Cartier Emmanuel (2017), <u><a href="http://aclweb.org/anthology/W17-4103" target="new">Character Based Pattern Mining for Neology Detection</a></u>
 ,Proceedings of the First Workshop on Subword and Character Level Models in NLP , EMNLP 2017, Copenhagen, p.25-30.</p>
-										
+
 										</div>
 						<!-- tab 4 : liens -->
                                      <div role="tabpanel" class="tab-pane" id="messages">
@@ -724,7 +723,7 @@ function togglevisible(id, currentvalue) {
 <!-- 010118            <script type="text/javascript" src="../lib/js/Chart.min.js"></script> -->
             <script type="text/javascript" src="../lib/js/bootstrap-switch.min.js"></script>
 <!--            <script type="text/javascript" src="../lib/js/jquery.matchHeight-min.js"></script> -->
- 	<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/s/dt/jqc-1.12.0,moment-2.11.2,dt-1.10.11,b-1.1.2,se-1.1.2/datatables.min.js"></script> 
+ 	<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/s/dt/jqc-1.12.0,moment-2.11.2,dt-1.10.11,b-1.1.2,se-1.1.2/datatables.min.js"></script>
 <!--            <script type="text/javascript" src="../lib/js/jquery.dataTables.min.js"></script>-->
             <script type="text/javascript" src="../lib/js/dataTables.bootstrap.min.js"></script>
             <script type="text/javascript" charset="utf-8" src="js/dataTables.editor.min.js"></script>
@@ -748,7 +747,7 @@ function togglevisible(id, currentvalue) {
            var languageW = '<?php echo $_SESSION["language"]; ?>';
 	//	document.addEventListener('touchstart', onTouchStart, {passive: true});
            // $(document).ready(function(){
-    		//	$('[data-toggle="tooltip"]').tooltip(); 
+    		//	$('[data-toggle="tooltip"]').tooltip();
 			//});
 
 
